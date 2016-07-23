@@ -9,6 +9,7 @@
 import UIKit
 
 class TweetTableViewCell: UITableViewCell {
+    
     static var ClassName: String = "TweetTableViewCell"
     
     @IBOutlet weak var profileImageView: UIImageView!

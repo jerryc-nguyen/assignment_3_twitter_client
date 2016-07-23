@@ -43,6 +43,21 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         })
     }
     
+    func createTweet(text: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        let parameters: [String: AnyObject] = [
+            "status": text
+        ]
+        
+        POST("1.1/statuses/update.json", parameters: parameters, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+            if let tweetData = response as? NSDictionary {
+                let tweet = Tweet(dictionary: tweetData)
+                success(tweet)
+            }
+        }, failure: { (task: NSURLSessionDataTask?, error: NSError) in
+            failure(error)
+        })
+    }
+    
     func currentUser(success: (User) -> (), failure: (NSError) -> ()) {
         GET("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
             let userDictionary = response as! NSDictionary
@@ -67,12 +82,6 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: requestToken, success: { (response: BDBOAuth1Credential!) in
             
-//            self.homeTimeline({ (tweets: [Tweet]) in
-//                print("Get tweets", tweets)
-//            }, failure: { (error: NSError) in
-//                print("Get error", error.localizedDescription)
-//            })
-//            
             self.currentUser({ (user: User) in
                 User.currentUser = user
                 self.onLoginSuccess?()
@@ -84,5 +93,6 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
             self.onLoginFailure?(error)
         }
     }
+    
     
 }
