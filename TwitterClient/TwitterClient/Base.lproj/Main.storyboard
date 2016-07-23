@@ -31,10 +31,56 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <segue destination="J0g-cp-UQ5" kind="modal" identifier="loginSegue" id="bp4-gi-Iyo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="145" y="297"/>
+        </scene>
+        <!--Tweets View Controller-->
+        <scene sceneID="orY-TE-a97">
+            <objects>
+                <viewController id="Z3g-en-uuB" customClass="TweetsViewController" customModule="TwitterClient" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WXN-Dn-7BF"/>
+                        <viewControllerLayoutGuide type="bottom" id="7Cx-Jp-U2x"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mr1-0V-gPT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="RBs-te-97s">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="g3K-Rw-dat">
+                            <connections>
+                                <action selector="onLogoutClicked:" destination="Z3g-en-uuB" id="LnX-zE-5CI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xo0-EB-KNg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="940" y="297"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="8F9-iJ-sgF">
+            <objects>
+                <navigationController storyboardIdentifier="TweetNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="J0g-cp-UQ5" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="u1D-gN-BU6">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Z3g-en-uuB" kind="relationship" relationship="rootViewController" id="FYV-w1-sib"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eCL-wS-YhK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="551" y="297"/>
         </scene>
     </scenes>
 </document>

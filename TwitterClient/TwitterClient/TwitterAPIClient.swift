@@ -55,24 +55,30 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         })
     }
     
-    func handleOutSideCallbackFrom(url: NSURL) {
+    func logout() -> Void {
+        User.currentUser = nil
+        deauthorize()
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(User.userDidLogoutNotification, object: nil)
+    }
+    
+    func handleOffSiteCallbackFrom(url: NSURL) {
         let requestToken = BDBOAuth1Credential(queryString: url.query)
         
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: requestToken, success: { (response: BDBOAuth1Credential!) in
             
-            self.homeTimeline({ (tweets: [Tweet]) in
-                print("Get tweets", tweets)
-            }, failure: { (error: NSError) in
-                print("Get error", error.localizedDescription)
-            })
-            
+//            self.homeTimeline({ (tweets: [Tweet]) in
+//                print("Get tweets", tweets)
+//            }, failure: { (error: NSError) in
+//                print("Get error", error.localizedDescription)
+//            })
+//            
             self.currentUser({ (user: User) in
-                print("Get user:", user)
+                User.currentUser = user
+                self.onLoginSuccess?()
             }, failure: { (error: NSError) in
-                print("Get error", error.localizedDescription)
+                self.onLoginFailure?(error)
             })
-            
-            self.onLoginSuccess?()
             
         }) { (error: NSError!) in
             self.onLoginFailure?(error)
