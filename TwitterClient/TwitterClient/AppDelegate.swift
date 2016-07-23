@@ -43,32 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        let requestToken = BDBOAuth1Credential(queryString: url.query)
-        let twitterClient = BDBOAuth1SessionManager(baseURL: NSURL(string: "https://api.twitter.com"),
-                                                    consumerKey: "Yr5fqM7SRLMkv7ALlXCLUgPfE",
-                                                    consumerSecret: "z4SYB31U6RNzSjbrJORDLcI54gaH5fxF72965eCaWE4G9YBuCq")
-        twitterClient.fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: requestToken, success: { (response: BDBOAuth1Credential!) in
-            print("I got access token")
-            twitterClient.GET("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
-                let userDictionary = response as! NSDictionary
-                let user = User(dictionary: userDictionary)
-                print("User", user)
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) in
-                print("Error", error.localizedDescription)
-            })
-            
-            twitterClient.GET("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
-                let tweetDictionaries = response as! [NSDictionary]
-                let tweets = Tweet.tweetsWithArray(tweetDictionaries)
-                
-                print("tweets", tweets)
-                }, failure: { (task: NSURLSessionDataTask?, error: NSError) in
-                    print("Error", error.localizedDescription)
-            })
-            
-        }) { (error: NSError!) in
-            print("Error:", error.localizedDescription)
-        }
+        
+        let twitterAPIClient = TwitterAPIClient.sharedInstance
+        
+        twitterAPIClient.handleOutSideCallbackFrom(url)
         
         return true
     }
