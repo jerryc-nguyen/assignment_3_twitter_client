@@ -19,9 +19,7 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
     func login(success: () -> (), failure: (NSError) -> ()) {
         onLoginSuccess = success
         onLoginFailure = failure
-        
-        deauthorize()
-        
+
         fetchRequestTokenWithPath("oauth/request_token", method: "GET", callbackURL: NSURL(string: "twitterclient://oauth"), scope: nil, success: { (response: BDBOAuth1Credential!) in
             print("I got token")
             let authorizeUrl = NSURL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(response.token)")!
