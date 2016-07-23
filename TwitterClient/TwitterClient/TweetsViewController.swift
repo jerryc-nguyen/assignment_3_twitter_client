@@ -10,12 +10,35 @@ import UIKit
 
 class TweetsViewController: UIViewController {
 
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    var tweets = [Tweet]()
+    
+    let client = TwitterAPIClient.sharedInstance
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        registerNibs()
+        
+        tableView.dataSource = self
+        
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 120
+        
+        client.homeTimeline({ (tweets: [Tweet]) in
+            self.tweets = tweets
+            self.tableView.reloadData()
+        }) { (error: NSError) in
+            print("Error: ", error.localizedDescription)
+        }
     }
-
+    
+    
+    func registerNibs() {
+        tableView.registerNib(UINib(nibName: TweetTableViewCell.ClassName, bundle: NSBundle.mainBundle()), forCellReuseIdentifier: TweetTableViewCell.ClassName)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -36,4 +59,17 @@ class TweetsViewController: UIViewController {
     }
     */
 
+}
+
+extension TweetsViewController: UITableViewDataSource {
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tweets.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(TweetTableViewCell.ClassName) as! TweetTableViewCell
+        cell.tweet = tweets[indexPath.row]
+        return cell
+    }
 }
