@@ -49,22 +49,20 @@ class TweetItemTableViewCell: UITableViewCell {
             screenNameLabel.text = "@\(user.screenName!)"
             tweetTextLabel.text = tweet!.text
             createdAtLabel.text = "12"
+            
+            refreshhHighLightBtn()
         }
     }
     
     @IBAction func onReplyTweet(sender: AnyObject) {
-        print("onReplyTweet")
-        
         self.delegate?.tweetItemTableViewCellDelegate?(self, triggeredAction: TweetActionTypes.Reply.rawValue)
     }
     
     @IBAction func onRetweet(sender: AnyObject) {
-        print("onRetweet")
         self.delegate?.tweetItemTableViewCellDelegate?(self, triggeredAction: TweetActionTypes.Retweet.rawValue)
     }
     
     @IBAction func onFavoriteTweet(sender: AnyObject) {
-        print("onFavoriteTweet")
         self.delegate?.tweetItemTableViewCellDelegate?(self, triggeredAction: TweetActionTypes.Favorite.rawValue)
     }
     
@@ -73,7 +71,6 @@ class TweetItemTableViewCell: UITableViewCell {
         // Initialization code
         
         refreshhHighLightBtn()
-        
     }
     
     func refreshhHighLightBtn() {
@@ -88,7 +85,7 @@ class TweetItemTableViewCell: UITableViewCell {
     
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        selectionStyle = UITableViewCellSelectionStyle.None
         // Configure the view for the selected state
     }
     

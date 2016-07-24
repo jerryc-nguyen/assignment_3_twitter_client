@@ -8,6 +8,8 @@
 
 import UIKit
 
+let DetailsSegueName = "detailsSegue"
+
 class TweetsViewController: UIViewController {
 
     
@@ -24,6 +26,7 @@ class TweetsViewController: UIViewController {
         registerNibs()
         
         tableView.dataSource = self
+        tableView.delegate = self
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 120
@@ -59,15 +62,15 @@ class TweetsViewController: UIViewController {
         TwitterAPIClient.sharedInstance.logout()
     }
     
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == DetailsSegueName {
+            
+        }
     }
-    */
 
 }
 
@@ -111,11 +114,7 @@ extension TweetsViewController: TweetItemTableViewCellDelegate {
     }
 }
 
-extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
+extension TweetsViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
@@ -128,3 +127,12 @@ extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 }
+
+extension TweetsViewController: UITableViewDelegate {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let detailVC = DetailsViewController.initFromStoryBoard()
+        detailVC.tweet = tweets[indexPath.row]
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+

@@ -18,6 +18,13 @@ class Tweet: NSObject {
     var retweeted: Bool = false
     var favorited: Bool = false
     
+    var formattedSortDate: String? {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "M/d/yy, H:mm"
+        return formatter.stringFromDate(timestamp!)
+    }
+
+    
     init(dictionary: NSDictionary) {
         text = dictionary["text"] as? String
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
