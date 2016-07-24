@@ -17,6 +17,8 @@ class TweetsViewController: UIViewController {
     
     let client = TwitterAPIClient.sharedInstance
     
+    let refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerNibs()
@@ -26,20 +28,25 @@ class TweetsViewController: UIViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 120
         
+        refreshControl.addTarget(self, action: #selector(loadTweets), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        
+        loadTweets()
+    }
+    
+    func loadTweets() {
         client.homeTimeline({ (tweets: [Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         }) { (error: NSError) in
             print("Error: ", error.localizedDescription)
         }
     }
     
-    
     func registerNibs() {
         tableView.registerNib(UINib(nibName: TweetTableViewCell.ClassName, bundle: NSBundle.mainBundle()), forCellReuseIdentifier: TweetTableViewCell.ClassName)
     }
-    
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
