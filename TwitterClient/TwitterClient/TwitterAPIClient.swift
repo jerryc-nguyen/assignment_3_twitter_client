@@ -41,12 +41,8 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         })
     }
     
-    func createTweet(text: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
-        let parameters: [String: AnyObject] = [
-            "status": text
-        ]
-        
-        POST("1.1/statuses/update.json", parameters: parameters, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+    func createTweet(params: AnyObject, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        POST("1.1/statuses/update.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
             if let tweetData = response as? NSDictionary {
                 let tweet = Tweet(dictionary: tweetData)
                 success(tweet)
@@ -54,6 +50,35 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         }, failure: { (task: NSURLSessionDataTask?, error: NSError) in
             failure(error)
         })
+    }
+    
+    func favorite(statusId: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        let params = ["id" : statusId]
+        
+        POST("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+            
+            if let tweetData = response as? NSDictionary {
+                let tweet = Tweet(dictionary: tweetData)
+                success(tweet)
+            }
+            
+        }) { (task: NSURLSessionDataTask?, error: NSError) in
+            failure(error)
+        }
+    }
+    
+    func retweet(statusId: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        
+        let url = "1.1/statuses/retweet/\(statusId).json"
+        
+        POST(url, parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask,response: AnyObject?) in
+            if let tweetData = response as? NSDictionary {
+                let tweet = Tweet(dictionary: tweetData)
+                success(tweet)
+            }
+        }) { (task: NSURLSessionDataTask?, error: NSError) in
+            failure(error)
+        }
     }
     
     func currentUser(success: (User) -> (), failure: (NSError) -> ()) {
@@ -91,6 +116,5 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
             self.onLoginFailure?(error)
         }
     }
-    
     
 }

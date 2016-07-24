@@ -27,6 +27,7 @@ class TweetsViewController: UIViewController {
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 120
+        self.tableView.delaysContentTouches = false
         
         refreshControl.addTarget(self, action: #selector(loadTweets), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
@@ -45,7 +46,7 @@ class TweetsViewController: UIViewController {
     }
     
     func registerNibs() {
-        tableView.registerNib(UINib(nibName: TweetTableViewCell.ClassName, bundle: NSBundle.mainBundle()), forCellReuseIdentifier: TweetTableViewCell.ClassName)
+        tableView.registerNib(UINib(nibName: TweetItemTableViewCell.ClassName, bundle: NSBundle.mainBundle()), forCellReuseIdentifier: TweetItemTableViewCell.ClassName)
     }
     
     override func didReceiveMemoryWarning() {
@@ -70,15 +71,60 @@ class TweetsViewController: UIViewController {
 
 }
 
-extension TweetsViewController: UITableViewDataSource {
+extension TweetsViewController: TweetItemTableViewCellDelegate {
+    
+    func tweetItemTableViewCellDelegate(tweetItemTableViewCell: TweetItemTableViewCell, triggeredAction value: Int) {
+        
+        let indexPath = tableView.indexPathForCell(tweetItemTableViewCell)
+        let selectedTweet = tweets[indexPath!.row]
+        
+        switch (value) {
+        case TweetActionTypes.Reply.rawValue:
+            let composeVC = ComposeTweetViewController.initFromStoryBoard()
+            composeVC.isReply = true
+            composeVC.replyToStatusId = selectedTweet.uuid
+            
+            if let screenName = selectedTweet.user.screenName {
+               composeVC.screenNameToReply = "@\(screenName)"
+            }
+            
+            navigationController?.pushViewController(composeVC, animated: true)
+        case TweetActionTypes.Retweet.rawValue:
+            
+            client.retweet(selectedTweet.uuid!, success: { (tweet: Tweet) in
+                tweetItemTableViewCell.isRetweeted = true
+                tweetItemTableViewCell.refreshhHighLightBtn()
+            }, failure: { (error: NSError) in
+                print(error.localizedDescription)
+            })
+            
+        case TweetActionTypes.Favorite.rawValue:
+            client.favorite(selectedTweet.uuid!, success: { (tweet: Tweet) in
+                tweetItemTableViewCell.isFavorited = true
+                tweetItemTableViewCell.refreshhHighLightBtn()
+                }, failure: { (error: NSError) in
+                    print(error.localizedDescription)
+            })
+        default: break
+        }
+        
+    }
+}
+
+extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(TweetTableViewCell.ClassName) as! TweetTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(TweetItemTableViewCell.ClassName) as! TweetItemTableViewCell
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
 }

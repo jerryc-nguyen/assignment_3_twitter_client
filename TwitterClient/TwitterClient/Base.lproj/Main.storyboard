@@ -92,7 +92,7 @@
         <!--Compose Tweet View Controller-->
         <scene sceneID="i7f-ML-mei">
             <objects>
-                <viewController id="Zas-lc-lbf" customClass="ComposeTweetViewController" customModule="TwitterClient" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ComposeTweetViewController" id="Zas-lc-lbf" customClass="ComposeTweetViewController" customModule="TwitterClient" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kta-fp-Bh6"/>
                         <viewControllerLayoutGuide type="bottom" id="FH2-A5-wzs"/>
@@ -111,7 +111,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKD-dU-3c6">
                                 <rect key="frame" x="64" y="75" width="44" height="21"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KIv-dV-oFb">
@@ -167,6 +167,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="createTweetBtn" destination="75D-Et-K2I" id="VLe-rf-ebb"/>
                         <outlet property="nameLabel" destination="cKD-dU-3c6" id="OU6-z6-Aji"/>
                         <outlet property="screenNameLabel" destination="KIv-dV-oFb" id="FXI-tK-1sZ"/>
                         <outlet property="tweetText" destination="Fzg-6g-pmK" id="eXx-T3-lxy"/>
