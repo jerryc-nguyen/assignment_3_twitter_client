@@ -76,7 +76,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="New"/>
                                 <connections>
-                                    <segue destination="Zas-lc-lbf" kind="push" id="vA8-lD-SPY"/>
+                                    <segue destination="Zas-lc-lbf" kind="push" identifier="newTweetSegue" id="vA8-lD-SPY"/>
                                 </connections>
                             </button>
                         </barButtonItem>
@@ -132,7 +132,6 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="onReplyTweet:" destination="0Nv-ae-JoJ" eventType="touchUpInside" id="mJy-cN-fG6"/>
                                     <segue destination="Zas-lc-lbf" kind="push" identifier="detailsReplySegue" id="MjO-hU-AB0"/>
                                 </connections>
                             </button>
@@ -389,6 +388,6 @@
         <image name="retweet-action" width="75" height="72"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MjO-hU-AB0"/>
+        <segue reference="vA8-lD-SPY"/>
     </inferredMetricsTieBreakers>
 </document>

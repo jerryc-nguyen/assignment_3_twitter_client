@@ -95,7 +95,6 @@ class DetailsViewController: UIViewController {
             print(error.localizedDescription)
         })
     }
-  
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -111,7 +110,11 @@ class DetailsViewController: UIViewController {
             let replyVC = segue.destinationViewController as! ComposeTweetViewController
             replyVC.isReply = true
             replyVC.replyToStatusId = tweet.uuid
-            replyVC.screenNameToReply = "@\(tweet.user.screenName)"
+            
+            if let screenName = tweet.user.screenName {
+                replyVC.screenNameToReply = "@\(screenName)"
+            }
+            
         }
     }
     

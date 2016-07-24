@@ -9,6 +9,7 @@
 import UIKit
 
 let DetailsSegueName = "detailsSegue"
+let NewTweetSegueName = "newTweetSegue"
 
 class TweetsViewController: UIViewController {
 
@@ -67,8 +68,9 @@ class TweetsViewController: UIViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == DetailsSegueName {
-            
+        if segue.identifier == NewTweetSegueName {
+            let composeVC = segue.destinationViewController as! ComposeTweetViewController
+            composeVC.delegate = self
         }
     }
 
@@ -90,6 +92,8 @@ extension TweetsViewController: TweetItemTableViewCellDelegate {
             if let screenName = selectedTweet.user.screenName {
                composeVC.screenNameToReply = "@\(screenName)"
             }
+            
+            composeVC.delegate = self
             
             navigationController?.pushViewController(composeVC, animated: true)
         case TweetActionTypes.Retweet.rawValue:
@@ -133,6 +137,13 @@ extension TweetsViewController: UITableViewDelegate {
         let detailVC = DetailsViewController.initFromStoryBoard()
         detailVC.tweet = tweets[indexPath.row]
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension TweetsViewController: ComposeTweetViewControllerDelegate {
+    func composeTweetViewControllerDelegate(composeTweetViewController: ComposeTweetViewController, createdTweet value: Tweet) {
+        tweets.insert(value, atIndex: 0)
+        tableView.reloadData()
     }
 }
 

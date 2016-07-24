@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol ComposeTweetViewControllerDelegate {
-    func composeTweetViewControllerDelegate(composeTweetViewController: ComposeTweetViewController, createdTweet value: Tweet)
+    optional func composeTweetViewControllerDelegate(composeTweetViewController: ComposeTweetViewController, createdTweet value: Tweet)
 }
 
 class ComposeTweetViewController: UIViewController {
@@ -23,6 +23,7 @@ class ComposeTweetViewController: UIViewController {
     @IBOutlet weak var screenNameLabel: UILabel!
     
     @IBOutlet weak var tweetText: UITextView!
+    
     
     var isReply: Bool = false
     var replyToStatusId: String?
@@ -90,9 +91,8 @@ class ComposeTweetViewController: UIViewController {
                 }
                 
                 client.createTweet(params, success: { (tweet: Tweet) in
-                    print("Create tweet success", tweet.text)
                     self.backToPreviousVC()
-                    self.delegate?.composeTweetViewControllerDelegate(self, createdTweet: tweet)
+                    self.delegate?.composeTweetViewControllerDelegate?(self, createdTweet: tweet)
                 }) { (error: NSError) in
                     print("Create tweet fail: ", error.localizedDescription)
                 }
