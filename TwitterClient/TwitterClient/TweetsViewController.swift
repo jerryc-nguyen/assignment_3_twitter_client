@@ -97,17 +97,19 @@ extension TweetsViewController: TweetItemTableViewCellDelegate {
             
             navigationController?.pushViewController(composeVC, animated: true)
         case TweetActionTypes.Retweet.rawValue:
+            let isRetweet = !selectedTweet.retweeted
             
-            client.retweet(selectedTweet.uuid!, success: { (tweet: Tweet) in
-                tweetItemTableViewCell.isRetweeted = true
+            client.retweet(selectedTweet.uuid!, isRetweet: isRetweet,  success: { (tweet: Tweet) in
+                tweetItemTableViewCell.isRetweeted = tweet.retweeted
                 tweetItemTableViewCell.refreshhHighLightBtn()
             }, failure: { (error: NSError) in
                 print(error.localizedDescription)
             })
             
         case TweetActionTypes.Favorite.rawValue:
-            client.favorite(selectedTweet.uuid!, success: { (tweet: Tweet) in
-                tweetItemTableViewCell.isFavorited = true
+            let isFavorite = !selectedTweet.favorited
+            client.favorite(selectedTweet.uuid!, isFavorite: isFavorite, success: { (tweet: Tweet) in
+                tweetItemTableViewCell.isFavorited = tweet.favorited
                 tweetItemTableViewCell.refreshhHighLightBtn()
                 }, failure: { (error: NSError) in
                     print(error.localizedDescription)

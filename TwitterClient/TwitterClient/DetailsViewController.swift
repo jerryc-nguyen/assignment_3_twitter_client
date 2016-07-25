@@ -34,8 +34,25 @@ class DetailsViewController: UIViewController {
     
     let client = TwitterAPIClient.sharedInstance
     
-    var isRetweeted = false
-    var isFavorited = false
+    var isFavorited: Bool {
+        get {
+            return tweet.favorited
+        }
+        
+        set(value) {
+            tweet.favorited = value
+        }
+    }
+    
+    var isRetweeted: Bool {
+        get {
+            return tweet.retweeted
+        }
+        
+        set(value) {
+            tweet.retweeted = value
+        }
+    }
     
     static func initFromStoryBoard() -> DetailsViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -52,12 +69,20 @@ class DetailsViewController: UIViewController {
     }
     
     func refreshhHighLightBtn() {
-        if tweet?.favorited == true || isFavorited == true  {
-            favoritedBtn.imageView!.image = UIImage(named: "liked")
+        guard tweet != nil else {
+            return
         }
         
-        if tweet?.retweeted == true || isRetweeted == true {
-            retweetBtn.imageView!.image = UIImage(named: "retweeted")
+        if isFavorited == true {
+            favoritedBtn.setImage(UIImage(named: "liked"), forState: .Normal)
+        } else {
+            favoritedBtn.setImage(UIImage(named: "like-action"), forState: .Normal)
+        }
+        
+        if isRetweeted == true {
+            retweetBtn.setImage(UIImage(named: "retweeted"), forState: .Normal)
+        } else {
+            retweetBtn.setImage(UIImage(named: "retweet-action"), forState: .Normal)
         }
     }
     
@@ -75,8 +100,8 @@ class DetailsViewController: UIViewController {
 
     @IBAction func onRetweet(sender: AnyObject) {
         
-        client.retweet(tweet.uuid!, success: { (tweet: Tweet) in
-            self.isRetweeted = true
+        client.retweet(tweet.uuid!, isRetweet: !isRetweeted, success: { (tweet: Tweet) in
+            self.isRetweeted = tweet.retweeted
             self.refreshhHighLightBtn()
             self.retweetedCountLabel.text = "\(tweet.retweetCount) retweets"
         }, failure: { (error: NSError) in
@@ -87,8 +112,8 @@ class DetailsViewController: UIViewController {
  
     @IBAction func onFavoriteTweet(sender: AnyObject) {
         
-        client.favorite(tweet.uuid!, success: { (tweet: Tweet) in
-            self.isFavorited = true
+        client.favorite(tweet.uuid!, isFavorite: !isFavorited, success: { (tweet: Tweet) in
+            self.isFavorited = tweet.favorited
             self.refreshhHighLightBtn()
             self.favoritedCountLabel.text = "\(tweet.favoritesCount) favorites"
         }, failure: { (error: NSError) in

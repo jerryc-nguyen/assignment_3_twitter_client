@@ -52,10 +52,12 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
         })
     }
     
-    func favorite(statusId: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+    func favorite(statusId: String, isFavorite: Bool , success: (Tweet) -> (), failure: (NSError) -> ()) {
         let params = ["id" : statusId]
         
-        POST("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+        let actionUrl = isFavorite ? "1.1/favorites/create.json" : "1.1/favorites/destroy.json"
+        
+        POST(actionUrl, parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
             
             if let tweetData = response as? NSDictionary {
                 let tweet = Tweet(dictionary: tweetData)
@@ -66,12 +68,16 @@ class TwitterAPIClient: BDBOAuth1SessionManager {
             failure(error)
         }
     }
-    
-    func retweet(statusId: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+
+    func retweet(statusId: String, isRetweet: Bool, success: (Tweet) -> (), failure: (NSError) -> ()) {
         
-        let url = "1.1/statuses/retweet/\(statusId).json"
+        print("Call API: isRetweet", isRetweet)
         
-        POST(url, parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask,response: AnyObject?) in
+        let action = isRetweet ? "retweet" : "unretweet"
+        
+        let url = "1.1/statuses/\(action)/\(statusId).json"
+        
+        POST(url, parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
             if let tweetData = response as? NSDictionary {
                 let tweet = Tweet(dictionary: tweetData)
                 success(tweet)

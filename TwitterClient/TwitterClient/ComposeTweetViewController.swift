@@ -66,7 +66,6 @@ class ComposeTweetViewController: UIViewController {
                 }
             }
         }
-        
     }
     
     func customRightNavItems() {

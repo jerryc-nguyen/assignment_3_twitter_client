@@ -38,10 +38,7 @@ class TweetItemTableViewCell: UITableViewCell {
     
     @IBOutlet weak var favoritedBtn: UIButton!
     
-    var isRetweeted = false
-    var isFavorited = false
-    
-    var tweet: Tweet? {
+    var tweet: Tweet! {
         didSet {
             let user = tweet!.user
             profileImageView.setImageWithURL(user.profileImageUrl!)
@@ -52,6 +49,34 @@ class TweetItemTableViewCell: UITableViewCell {
             
             refreshhHighLightBtn()
         }
+    }
+    
+    var isFavorited: Bool {
+        get {
+           return tweet.favorited
+        }
+        
+        set(value) {
+            tweet.favorited = value
+        }
+    }
+    
+    var isRetweeted: Bool {
+        get {
+            return tweet.retweeted
+        }
+        
+        set(value) {
+            tweet.retweeted = value
+        }
+    }
+    
+    func toggleRetweeted() {
+        tweet.favorited = !tweet.favorited
+    }
+    
+    func toggleFavorited() {
+        tweet.retweeted = !tweet.retweeted
     }
     
     @IBAction func onReplyTweet(sender: AnyObject) {
@@ -74,12 +99,20 @@ class TweetItemTableViewCell: UITableViewCell {
     }
     
     func refreshhHighLightBtn() {
-        if tweet?.favorited == true || isFavorited == true  {
-            favoritedBtn.imageView?.image = UIImage(named: "liked")
+        guard tweet != nil else {
+            return
         }
         
-        if tweet?.retweeted == true || isRetweeted == true {
-            retweetBtn.imageView?.image = UIImage(named: "retweeted")
+        if isFavorited == true {
+            favoritedBtn.setImage(UIImage(named: "liked"), forState: .Normal)
+        } else {
+            favoritedBtn.setImage(UIImage(named: "like-action"), forState: .Normal)
+        }
+        
+        if isRetweeted == true {
+            retweetBtn.setImage(UIImage(named: "retweeted"), forState: .Normal)
+        } else {
+            retweetBtn.setImage(UIImage(named: "retweet-action"), forState: .Normal)
         }
     }
     
